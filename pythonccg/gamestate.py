@@ -1,6 +1,5 @@
 from pythonccg.zone import Zone
 
-
 class Gamestate:
     def __init__(self):
         self.health = [30, 30]
