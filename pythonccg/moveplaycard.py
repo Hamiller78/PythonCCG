@@ -6,6 +6,10 @@ class MovePlayCard:
         self.gamestate = gamestate
         self.card_id = card_id
         self._new_gamestate = None
+        self._output_text = f"MovePlayCard(card_id={self.card_id})"
+
+    def __repr__(self):
+        return self._output_text
 
     def get_new_gamestate(self) -> Gamestate:
         if self._new_gamestate is not None:
@@ -19,6 +23,8 @@ class MovePlayCard:
 
         if new_gamestate.current_mana[new_gamestate.active_player] < card.cost:
             raise ValueError("Not enough mana to play this card.")
+
+        self._output_text = (f"Player {new_gamestate.active_player + 1} plays card {repr(card)} (ID: {card.id})")
 
         # Play the card: remove from hand, add to board, reduce mana
         new_gamestate.hand[new_gamestate.active_player].cards.remove(card)

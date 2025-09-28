@@ -6,6 +6,10 @@ class MoveMinionAttacksPlayer:
         self.gamestate = gamestate
         self.minion_id = minion_id
         self._new_gamestate = None
+        self._output_text = f"MoveMinionAttacksPlayer(minion_id={self.minion_id})"
+
+    def __repr__(self):
+        return self._output_text
 
     def get_new_gamestate(self) -> Gamestate:
         if self._new_gamestate is not None:
@@ -16,6 +20,9 @@ class MoveMinionAttacksPlayer:
 
         if attacker is None:
             raise ValueError("Attacking minion not found on the board.")
+
+        self._output_text = (f"Player {new_gamestate.active_player + 1}'s Minion {attacker.name} (ID: {attacker.id}) attacks Player "
+                f"{1 - new_gamestate.active_player + 1} for {attacker.attack} damage")
 
         # Deal damage to the opposing player
         new_gamestate.health[1 - new_gamestate.active_player] -= attacker.attack

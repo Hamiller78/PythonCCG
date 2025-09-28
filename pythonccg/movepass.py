@@ -4,6 +4,9 @@ class MovePass:
     def __init__(self, gamestate: Gamestate):
         self.gamestate = gamestate
 
+    def __repr__(self):
+        return f"Player {self.gamestate.active_player + 1} passes their turn."
+
     def get_new_gamestate(self) -> Gamestate:
         new_gamestate = self.gamestate.clone()
         new_gamestate.active_player = 1 - new_gamestate.active_player

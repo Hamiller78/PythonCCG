@@ -6,7 +6,12 @@ class MoveMinionAttacksMinion:
         self.attacker_id = attacker_id
         self.defender_id = defender_id
         self._new_gamestate = None
+        self._output_text = (f"MoveMinionAttacksMinion(attacker_id={self.attacker_id}, "
+                f"defender_id={self.defender_id})")
 
+    def __repr__(self):
+        return self._output_text
+    
     def get_new_gamestate(self) -> Gamestate:
         if self._new_gamestate is not None:
             return self._new_gamestate
@@ -18,6 +23,8 @@ class MoveMinionAttacksMinion:
         if attacker is None or defender is None:
             raise ValueError("Attacker or defender not found on the board.")
 
+        self._output_text = (f"Player {new_gamestate.active_player + 1}'s Minion {attacker.name} (ID: {attacker.id}) attacks Minion {defender.name} (ID: {defender.id})")
+
         # Both minions deal damage to each other
         defender.health -= attacker.attack
         attacker.health -= defender.attack
@@ -25,8 +32,11 @@ class MoveMinionAttacksMinion:
         # Remove dead minions from the board
         if defender.health <= 0:
             new_gamestate.board[1 - new_gamestate.active_player].cards.remove(defender)
+            self._output_text += f"; Defender {defender.name} (ID: {defender.id}) is destroyed!"
+
         if attacker.health <= 0:
             new_gamestate.board[new_gamestate.active_player].cards.remove(attacker)
+            self._output_text += f"; Attacker {attacker.name} (ID: {attacker.id}) is destroyed!"
 
         self._new_gamestate = new_gamestate
         return self._new_gamestate
