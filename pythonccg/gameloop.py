@@ -3,6 +3,7 @@ from pythonccg.gamestate import Gamestate
 from pythonccg.moveprovider import MoveProvider
 from pythonccg.moves import *
 from pythonccg.zone import Zone
+import os
 import random
 
 class Gameloop:
@@ -11,12 +12,14 @@ class Gameloop:
         pass
 
     def setup_game(self) -> Gamestate:
-        cardpool = Cardpool()  # Assuming a CardPool class exists to manage card creation
-        cardpool.load_cards_from_file('assets/BasicSet.csv')
+        cardpool = Cardpool()
+        assets_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'assets'))
+        cardpool.load_from_csv(os.path.join(assets_dir, 'BasicSet.csv'))
 
         initial_state = Gamestate()
-        initial_state.draw_deck[0].fill_from_file('assets/Decklist.txt', cardpool)
-        initial_state.draw_deck[1].fill_from_file('assets/Decklist.txt', cardpool)
+        decklist_path = os.path.join(assets_dir, 'Decklist.txt')
+        initial_state.draw_deck[0].fill_from_file(decklist_path, cardpool)
+        initial_state.draw_deck[1].fill_from_file(decklist_path, cardpool)
 
         for _ in range(3):
             initial_state.hand[0].add_to_bottom(initial_state.draw_deck[0].remove_from_top())

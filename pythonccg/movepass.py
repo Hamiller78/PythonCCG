@@ -1,4 +1,4 @@
-from pythonccg.zone import Gamestate
+from pythonccg.gamestate import Gamestate
 
 class MovePass:
     def __init__(self, gamestate: Gamestate):
@@ -12,7 +12,7 @@ class MovePass:
         
         # Draw a card at the start of the turn if possible
         if new_gamestate.draw_deck[new_gamestate.active_player].cards:
-            drawn_card = new_gamestate.draw_deck[new_gamestate.active_player].remove_top()
+            drawn_card = new_gamestate.draw_deck[new_gamestate.active_player].remove_from_top()
             new_gamestate.hand[new_gamestate.active_player].add_to_top(drawn_card)
         
         return new_gamestate
