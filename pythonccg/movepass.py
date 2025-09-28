@@ -18,4 +18,8 @@ class MovePass:
             drawn_card = new_gamestate.draw_deck[new_gamestate.active_player].remove_from_top()
             new_gamestate.hand[new_gamestate.active_player].add_to_top(drawn_card)
         
+        # Ready all minions on the board for the new active player
+        for minion in new_gamestate.board[new_gamestate.active_player].cards:
+            minion.is_ready = True
+
         return new_gamestate

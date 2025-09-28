@@ -10,14 +10,16 @@ class MoveProvider:
         for card in gamestate.hand[gamestate.active_player].cards:
             if gamestate.current_mana[gamestate.active_player] >= card.cost:
                 moves.append(MovePlayCard(gamestate, card.id))
-        
+
+        possible_attackers = [m for m in gamestate.board[gamestate.active_player].cards if m.is_ready]
+
         # Add moves for minions attacking other minions
-        for attacker in gamestate.board[gamestate.active_player].cards:
+        for attacker in possible_attackers:
             for defender in gamestate.board[1 - gamestate.active_player].cards:
                 moves.append(MoveMinionAttacksMinion(gamestate, attacker.id, defender.id))
         
         # Add moves for minions attacking the opposing player
-        for minion in gamestate.board[gamestate.active_player].cards:
+        for minion in possible_attackers:
             moves.append(MoveMinionAttacksPlayer(gamestate, minion.id))
         
         # Add move for passing the turn

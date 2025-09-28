@@ -28,6 +28,7 @@ class MoveMinionAttacksMinion:
         # Both minions deal damage to each other
         defender.health -= attacker.attack
         attacker.health -= defender.attack
+        attacker.is_ready = False
 
         # Remove dead minions from the board
         if defender.health <= 0:

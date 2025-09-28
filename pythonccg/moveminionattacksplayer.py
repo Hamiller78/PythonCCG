@@ -26,6 +26,7 @@ class MoveMinionAttacksPlayer:
 
         # Deal damage to the opposing player
         new_gamestate.health[1 - new_gamestate.active_player] -= attacker.attack
+        attacker.is_ready = False
         self._new_gamestate = new_gamestate
         
         return new_gamestate

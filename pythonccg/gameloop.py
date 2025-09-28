@@ -1,6 +1,7 @@
 from pythonccg.cardpool import Cardpool
 from pythonccg.gamestate import Gamestate
 from pythonccg.moveprovider import MoveProvider
+from pythonccg.moveselector import MoveSelector
 from pythonccg.moves import *
 from pythonccg.zone import Zone
 import os
@@ -32,7 +33,8 @@ class Gameloop:
         current_state = initial_state
         while True:
             available_moves = MoveProvider().get_all_moves(current_state)
-            selected_move = random.choice(available_moves)
+            best_moves = MoveSelector().select_move(available_moves)
+            selected_move = random.choice(best_moves)
             new_state = selected_move.get_new_gamestate()
             print(repr(selected_move))
 
