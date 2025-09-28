@@ -31,8 +31,10 @@ class Gameloop:
     def run_game(self, initial_state: Gamestate) -> int:
         current_state = initial_state
         while True:
-            available_moves = MoveProvider().get_all_moves(initial_state)
+            available_moves = MoveProvider().get_all_moves(current_state)
+            print(f"Number of available moves: {len(available_moves)}")
             selected_move = random.choice(available_moves)
+            print(f"Player {current_state.active_player + 1} plays: {selected_move}")
             new_state = selected_move.get_new_gamestate()
 
             if new_state.health[0] <= 0 and new_state.health[1] <= 0:
@@ -44,3 +46,6 @@ class Gameloop:
             elif new_state.health[1] <= 0:
                 print("Player 1 wins!")
                 return 0  # Player 1 wins
+            else:
+                print(f"Player 1 Health: {new_state.health[0]}, Player 2 Health: {new_state.health[1]}")
+                current_state = new_state
