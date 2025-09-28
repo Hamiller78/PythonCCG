@@ -1,4 +1,5 @@
-from pythonccg.gamestate import Gamestate, MovePlayCard, MoveMinionAttacksMinion, MoveMinionAttacksPlayer, MovePass
+from pythonccg.gamestate import Gamestate
+from pythonccg.moves import *
 
 class MoveProvider:
     

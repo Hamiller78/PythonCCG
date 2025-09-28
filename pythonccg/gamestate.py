@@ -2,7 +2,7 @@ from pythonccg.zone import Zone
 
 class Gamestate:
     def __init__(self):
-        self.health = [30, 30]
+        self.health = [20, 20]
         self.draw_deck = [Zone(name="Draw Deck 1"), Zone(name="Draw Deck 2")]
         self.hand = [Zone(name="Hand 1"), Zone(name="Hand 2")]
         self.board = [Zone(name="Board 1"), Zone(name="Board 2")]
