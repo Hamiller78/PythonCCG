@@ -1,3 +1,4 @@
+from pythonccg.gamestate import Gamestate
 from pythonccg.moves import *
 
 class MoveSelector:
@@ -14,3 +15,8 @@ class MoveSelector:
             return attack_moves
         
         return [move for move in possible_moves if isinstance(move, MovePass)]
+    
+    def rate_gamestate(self, gamestate: Gamestate, int player) -> int:
+        score = 0
+
+        return score

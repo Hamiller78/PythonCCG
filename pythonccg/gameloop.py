@@ -3,6 +3,7 @@ from pythonccg.gamestate import Gamestate
 from pythonccg.moveprovider import MoveProvider
 from pythonccg.moveselector import MoveSelector
 from pythonccg.moves import *
+from pythonccg.renderer import Renderer
 from pythonccg.zone import Zone
 import os
 import random
@@ -36,7 +37,14 @@ class Gameloop:
             best_moves = MoveSelector().select_move(available_moves)
             selected_move = random.choice(best_moves)
             new_state = selected_move.get_new_gamestate()
+ 
+            os.system('clear') 
             print(repr(selected_move))
+            print("-" * 50)
+            gamestate_visual = Renderer().ascii_render_gamestate(current_state)
+            print(gamestate_visual)
+
+            input()
 
             if new_state.health[0] <= 0 and new_state.health[1] <= 0:
                 print("The game is a draw!")
