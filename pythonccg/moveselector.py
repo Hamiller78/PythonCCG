@@ -1,64 +1,47 @@
 from pythonccg.gamestate import Gamestate
+from pythonccg.moveprovider import MoveProvider
 from pythonccg.moves import *
+from pythonccg.movetreenode import MoveTreeNode
 from typing import List, Tuple
 
 class MoveSelector:
     def __init__(self):
         pass
-
-    # def select_move(self, possible_moves: list[object]) -> list[object]:
-    #     play_moves = [move for move in possible_moves if isinstance(move, MovePlayCard)]
-    #     if len(play_moves) > 0:
-    #         return play_moves
-        
-    #     attack_moves = [move for move in possible_moves if isinstance(move, MoveMinionAttacksMinion) or isinstance(move, MoveMinionAttacksPlayer)]
-    #     if len(attack_moves) > 0:
-    #         return attack_moves
-        
-    #     return [move for move in possible_moves if isinstance(move, MovePass)]
  
-    def select_move(self, active_player: int, possible_moves: list[object]) -> object:
-        if not possible_moves:
-            raise ValueError("No possible moves to select from.")
-        
-        best_moves = self.get_best_moves(active_player, possible_moves, moves_to_keep=1)
-        best_move = best_moves[0]  # Since we only keep one best move
+    @staticmethod
+    def select_move(active_player: int, gamestate: Gamestate) -> object:
+        best_sequences = MoveSelector.get_sequences(active_player, gamestate)
+        best_sequence = best_sequences[0][0]
+        best_move = best_sequence[0]
 
         return best_move
 
-    def get_best_moves(self, active_player: int, possible_moves: list[object], moves_to_keep: int) -> List[object]:
-        scored_moves: List[Tuple[object, int]] = []
-        for move in possible_moves:
-            new_gamestate = move.get_new_gamestate()
-            score = self.rate_gamestate(new_gamestate, active_player)
-            scored_moves.append((move, score))
+    @staticmethod
+    def get_sequences(active_player: int, gamestate: Gamestate) -> List[Tuple[List[object], int]]:
+        initial_moves = MoveProvider().get_all_moves(gamestate)
+        all_sequences: List[Tuple[List[object], int]] = []
         
-        scored_moves.sort(key=lambda x: x[1], reverse=True)
-
-        # Print the scores for debugging
-        print("Move Scores:")
-        for move, score in scored_moves:
-            print(f"{repr(move)}: {score}")
-
-        best_moves = [move for move, score in scored_moves[:moves_to_keep]]
+        for move in initial_moves:
+            movetree = MoveSelector.get_movetree(active_player, move)
+            sequences = movetree.get_rated_sequences()
+            all_sequences.extend(sequences)
         
-        return best_moves
+        all_sequences.sort(key=lambda x: x[1], reverse=True)
+        return all_sequences
 
-    def rate_gamestate(self, gamestate: Gamestate, player: int) -> int:
-        if gamestate.health[player] <= 0:
-            return -100000  # Losing state
+    @staticmethod
+    def get_movetree(active_player: int, move: object) -> MoveTreeNode:
+        root_node = MoveTreeNode(move)
 
-        if gamestate.health[1 - player] <= 0:
-            return 100000  # Winning state
+        possible_moves = MoveProvider().get_all_moves(root_node.gamestate)
+        for next_move in possible_moves:
+            if active_player != root_node.gamestate.active_player and isinstance(next_move, MovePlayCard):
+                continue
+            if isinstance(next_move, MovePass):
+                child_node = MoveTreeNode(next_move, parent=root_node)
+                child_node.score = MoveTreeNode.rate_gamestate(child_node.gamestate, active_player)
+            else:
+                child_node = MoveSelector.get_movetree(active_player, next_move)
 
-        score = 0
-        score += gamestate.health[player] * 3
-        score -= gamestate.health[1 - player] * 3
-        score += sum(minion.attack + minion.health for minion in gamestate.board[player].cards) * 2
-        score -= sum(minion.attack + minion.health for minion in gamestate.board[1 - player].cards) * 2
-        score += len(gamestate.hand[player].cards)
-        score -= len(gamestate.hand[1 - player].cards)
-        score += gamestate.current_mana[player]
-        score -= gamestate.current_mana[1 - player]
-
-        return score
+            root_node.add_followup_move(child_node)
+        return root_node

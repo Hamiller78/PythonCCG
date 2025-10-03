@@ -13,7 +13,8 @@ class Gameloop:
     def __init__(self):
         pass
 
-    def setup_game(self) -> Gamestate:
+    @staticmethod
+    def setup_game() -> Gamestate:
         cardpool = Cardpool()
         assets_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'assets'))
         cardpool.load_from_csv(os.path.join(assets_dir, 'BasicSet.csv'))
@@ -30,14 +31,13 @@ class Gameloop:
 
         return initial_state
 
-    def run_game(self, initial_state: Gamestate) -> int:
+    @staticmethod
+    def run_game(initial_state: Gamestate) -> int:
         current_state = initial_state
         while True:
             os.system('clear') 
  
-            available_moves = MoveProvider().get_all_moves(current_state)
-            selected_move = MoveSelector().select_move(current_state.active_player, available_moves)
-            # selected_move = random.choice(best_moves)
+            selected_move = MoveSelector.select_move(current_state.active_player, current_state)
             new_state = selected_move.get_new_gamestate()
  
             print(repr(selected_move))
