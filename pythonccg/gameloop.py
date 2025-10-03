@@ -33,12 +33,13 @@ class Gameloop:
     def run_game(self, initial_state: Gamestate) -> int:
         current_state = initial_state
         while True:
+            os.system('clear') 
+ 
             available_moves = MoveProvider().get_all_moves(current_state)
-            best_moves = MoveSelector().select_move(available_moves)
-            selected_move = random.choice(best_moves)
+            selected_move = MoveSelector().select_move(current_state.active_player, available_moves)
+            # selected_move = random.choice(best_moves)
             new_state = selected_move.get_new_gamestate()
  
-            os.system('clear') 
             print(repr(selected_move))
             print("-" * 50)
             gamestate_visual = Renderer().ascii_render_gamestate(current_state)
