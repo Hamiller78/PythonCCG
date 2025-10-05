@@ -23,25 +23,27 @@ class MoveSelector:
         
         for move in initial_moves:
             movetree = MoveSelector.get_movetree(active_player, move)
-            sequences = movetree.get_rated_sequences()
+            sequences = movetree.get_rated_sequences(active_player)
             all_sequences.extend(sequences)
         
         all_sequences.sort(key=lambda x: x[1], reverse=True)
+        for seq in all_sequences:
+            print(f"Sequence: {[repr(m) for m in seq[0]]}, Score: {seq[1]}")
         return all_sequences
 
     @staticmethod
     def get_movetree(active_player: int, move: object) -> MoveTreeNode:
         root_node = MoveTreeNode(move)
 
+        if isinstance(move, MovePass):
+            root_node.score = MoveTreeNode.rate_gamestate(root_node.gamestate, active_player)
+            return root_node
+
         possible_moves = MoveProvider().get_all_moves(root_node.gamestate)
         for next_move in possible_moves:
             if active_player != root_node.gamestate.active_player and isinstance(next_move, MovePlayCard):
                 continue
-            if isinstance(next_move, MovePass):
-                child_node = MoveTreeNode(next_move, parent=root_node)
-                child_node.score = MoveTreeNode.rate_gamestate(child_node.gamestate, active_player)
-            else:
-                child_node = MoveSelector.get_movetree(active_player, next_move)
+            child_node = MoveSelector.get_movetree(active_player, next_move)
 
             root_node.add_followup_move(child_node)
         return root_node

@@ -35,7 +35,7 @@ class Gameloop:
     def run_game(initial_state: Gamestate) -> int:
         current_state = initial_state
         while True:
-            os.system('clear') 
+            print("\033c", end="") # Clear terminal
  
             selected_move = MoveSelector.select_move(current_state.active_player, current_state)
             new_state = selected_move.get_new_gamestate()

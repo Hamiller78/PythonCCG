@@ -13,14 +13,14 @@ class MoveTreeNode:
         self.children.append(child_node)
         child_node.parent = self
 
-    def get_rated_sequences(self) -> List[Tuple[List[object], int]]:
+    def get_rated_sequences(self, active_player: int) -> List[Tuple[List[object], int]]:
         sequences = []
         if self.is_pass():
-            score = self.rate_gamestate(self.gamestate, self.gamestate.active_player)
+            score = self.rate_gamestate(self.gamestate, active_player)
             sequences.append((self.get_sequence_to_node(), score))
         else:
             for child in self.children:
-                sequences.extend(child.get_rated_sequences())
+                sequences.extend(child.get_rated_sequences(active_player))
         return sequences
 
     def get_sequence_to_node(self) -> List[object]:
