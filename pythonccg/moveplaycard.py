@@ -1,15 +1,12 @@
 from pythonccg.gamestate import Gamestate
+from pythonccg.move import Move
 
-class MovePlayCard:
+
+class MovePlayCard(Move):
     def __init__(self, gamestate: Gamestate, card_id: int):
+        super().__init__(gamestate)
         self.card_id = card_id
-        self.gamestate = gamestate
-        self.card_id = card_id
-        self._new_gamestate = None
         self._output_text = f"MovePlayCard(card_id={self.card_id})"
-
-    def __repr__(self):
-        return self._output_text
 
     def get_new_gamestate(self) -> Gamestate:
         if self._new_gamestate is not None:

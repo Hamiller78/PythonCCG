@@ -1,8 +1,10 @@
 from pythonccg.gamestate import Gamestate
+from pythonccg.move import Move
 
-class MovePass:
+
+class MovePass(Move):
     def __init__(self, gamestate: Gamestate):
-        self.gamestate = gamestate
+        super().__init__(gamestate)
 
     def __repr__(self):
         return f"Player {self.gamestate.active_player + 1} passes their turn."

@@ -1,9 +1,10 @@
 from pythonccg.gamestate import Gamestate
 from pythonccg.moves import *
+from pythonccg.move import Move
 from typing import List, Tuple
 
 class MoveTreeNode:
-    def __init__(self, move: object, parent: 'MoveTreeNode' = None):
+    def __init__(self, move: Move, parent: 'MoveTreeNode' = None):
         self.gamestate = move.get_new_gamestate()
         self.move = move
         self.parent = parent
@@ -13,7 +14,7 @@ class MoveTreeNode:
         self.children.append(child_node)
         child_node.parent = self
 
-    def get_rated_sequences(self, active_player: int) -> List[Tuple[List[object], int]]:
+    def get_rated_sequences(self, active_player: int) -> List[Tuple[List[Move], int]]:
         sequences = []
         if self.is_pass():
             score = self.rate_gamestate(self.gamestate, active_player)
@@ -23,7 +24,7 @@ class MoveTreeNode:
                 sequences.extend(child.get_rated_sequences(active_player))
         return sequences
 
-    def get_sequence_to_node(self) -> List[object]:
+    def get_sequence_to_node(self) -> List[Move]:
         sequence = []
         node = self
         while node is not None:

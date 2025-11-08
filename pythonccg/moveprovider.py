@@ -1,9 +1,10 @@
 from pythonccg.gamestate import Gamestate
 from pythonccg.moves import *
+from pythonccg.move import Move
 
 class MoveProvider:
     
-    def get_all_moves(self, gamestate: Gamestate) -> list[object]:
+    def get_all_moves(self, gamestate: Gamestate) -> list[Move]:
         moves = []
         
         # Add moves for playing cards from hand

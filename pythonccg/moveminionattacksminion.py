@@ -1,17 +1,15 @@
 from pythonccg.gamestate import Gamestate
+from pythonccg.move import Move
 
-class MoveMinionAttacksMinion:
+
+class MoveMinionAttacksMinion(Move):
     def __init__(self, gamestate: Gamestate, attacker_id: int, defender_id: int):
-        self.gamestate = gamestate
+        super().__init__(gamestate)
         self.attacker_id = attacker_id
         self.defender_id = defender_id
-        self._new_gamestate = None
         self._output_text = (f"MoveMinionAttacksMinion(attacker_id={self.attacker_id}, "
                 f"defender_id={self.defender_id})")
 
-    def __repr__(self):
-        return self._output_text
-    
     def get_new_gamestate(self) -> Gamestate:
         if self._new_gamestate is not None:
             return self._new_gamestate
